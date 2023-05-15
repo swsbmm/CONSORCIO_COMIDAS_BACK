@@ -1,0 +1,64 @@
+Table restaurant {
+  id UUID [pk, not null]
+  name VARCHAR [not null]
+  speciality VARCHAR [not null]
+}
+
+Table ingredient {
+  id UUID [pk, not null]
+  name VARCHAR [not null]
+}
+
+Table product {
+  id UUID [pk, not null]
+  name VARCHAR [not null]
+  price DECIMAL [not null]
+  restaurant_id UUID [ref: > restaurant.id, not null]
+}
+
+Table product_ingredient {
+  product_id UUID [ref: > product.id, not null, pk]
+  ingredient_id UUID [ref: > ingredient.id, not null, pk]
+}
+
+Table menu {
+  id UUID [pk, not null]
+  name VARCHAR [not null]
+  base_price DECIMAL [not null]
+  restaurant_id UUID [ref: > restaurant.id, not null]
+}
+
+Table menu_product {
+  menu_id UUID [ref: > menu.id, not null, pk]
+  product_id UUID [ref: > product.id, not null, pk]
+}
+
+Table customer {
+  id UUID [pk, not null]
+  name VARCHAR [not null]
+  email VARCHAR [not null, unique]
+  phone_number VARCHAR [not null]
+}
+
+Table order {
+  id UUID [pk, not null]
+  customer_id UUID [ref: > customer.id, not null]
+  total_cost DECIMAL [not null]
+  created_at TIMESTAMP [not null]
+}
+
+Table order_item {
+  id UUID [pk, not null]
+  order_id UUID [ref: > order.id, not null]
+  menu_id UUID [ref: > menu.id, null]
+  product_id UUID [ref: > product.id, null]
+  price DECIMAL [not null]
+  quantity INT [not null]
+}
+
+Table customizable_ingredient {
+  id UUID [pk, not null]
+  ingredient_id UUID [ref: > ingredient.id, not null]
+  product_id UUID [ref: > product.id, not null]
+  additional_cost DECIMAL [not null]
+}
