@@ -1,12 +1,41 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
 
-consorcio_api = FastAPI()
+from DatabaseConnection import DatabaseConnection
+from DAO.restaurantDAO import RestaurantDao
+from DAO.productDAO import ProductDao
 
-@consorcio_api.get("/users/me")
-async def read_user_me():
-    return {"user_id": "the current user"}
+app = FastAPI()
+
+# Define el modelo Restaurant para el esquema de datos.
+class Restaurant(BaseModel):
+    id: int
+    nombre: str
+    url: str
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
+class Product(BaseModel):
+    id: int
+    nombre: str
+    url: str
+    descripcion: str
+    tipo: str
 
 
-@consorcio_api.get("/users/{user_id}")
-async def read_user(user_id: str):
-    return {"user_id": user_id}
+@app.get("/restaurants", response_model=List[Restaurant])
+async def read_restaurants():
+    db_connection = DatabaseConnection('consorcio', 'consorcio', 'nomelase123', '144.24.54.17', '5432')
+    restaurant_dao = RestaurantDao(db_connection)
+    restaurants = restaurant_dao.get_restaurants()
+    return restaurants
+
+@app.get("/products/{restaurant_id}", response_model=List[Restaurant])
+async def read_restaurants(restaurant_id: int):
+    db_connection = DatabaseConnection('consorcio', 'consorcio', 'nomelase123', '144.24.54.17', '5432')
+    product_dao = ProductDao(db_connection)
+    products = product_dao.get_products(restaurant_id)
+    return products
