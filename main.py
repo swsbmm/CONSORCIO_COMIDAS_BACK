@@ -33,7 +33,7 @@ async def read_restaurants():
     restaurants = restaurant_dao.get_restaurants()
     return restaurants
 
-@app.get("/products/{restaurant_id}", response_model=List[Restaurant])
+@app.get("/products/{restaurant_id}", response_model=List[Product])
 async def read_restaurants(restaurant_id: int):
     db_connection = DatabaseConnection('consorcio', 'consorcio', 'nomelase123', '144.24.54.17', '5432')
     product_dao = ProductDao(db_connection)
