@@ -2,11 +2,23 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 
+from fastapi.middleware.cors import CORSMiddleware
+
 from DatabaseConnection import DatabaseConnection
 from DAO.restaurantDAO import RestaurantDao
 from DAO.productDAO import ProductDao
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Define el modelo Restaurant para el esquema de datos.
 class Restaurant(BaseModel):
