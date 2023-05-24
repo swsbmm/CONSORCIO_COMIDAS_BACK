@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - reverse_proxy
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.consorcio_api.entrypoints=websecure"
+        - "traefik.http.routers.consorcio_api.rule=Host(`api.heflox.com`)"
+        - "traefik.http.routers.consorcio_api.service=consorcio_api"
+        - "traefik.http.services.consorcio_api.loadbalancer.server.port=80"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      placement:
+        constraints: [node.hostname == my-server]
