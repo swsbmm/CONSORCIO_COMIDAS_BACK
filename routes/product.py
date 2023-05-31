@@ -10,7 +10,7 @@ product_routes = APIRouter()
 
 @product_routes.get("/products/")
 async def read_products() -> List[dict]:
-    query = f"SELECT * FROM product"
+    query = f"select p.id as id, p.name as name, p.price as price, p.image_url, pt.name as type  from product p, product_type pt where p.type_id  = pt.id;"
     try:
         database = await get_database()
         restaurants = await database.fetch_all(query)
@@ -20,7 +20,7 @@ async def read_products() -> List[dict]:
 
 @product_routes.get("/products/{restaurant_id}")
 async def read_products(restaurant_id: str) -> List[dict]:
-    query = f"SELECT * FROM product WHERE id = '{restaurant_id}'"
+    query = f"select p.id as id, p.name as name, p.price as price, p.image_url, pt.name as type  from product p, product_type pt where p.type_id  = pt.id and p.restaurant_id = '{restaurant_id}'"
     try:
         database = await get_database()
         restaurants = await database.fetch_all(query)
